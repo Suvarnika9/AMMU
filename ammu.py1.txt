@@ -1,0 +1,60 @@
+import tkinter as tk
+from tkinter import messagebox
+from tkinter import ttk
+
+class StudentInfoApp:
+    def __init__(self, root):
+        self.root = root
+        self.root.title("Student Information System")
+        self.students = []  # List to store student info dictionaries
+
+        self.setup_widgets()
+
+    def setup_widgets(self):
+        # Labels and Entry fields
+        tk.Label(self.root, text="Name:").grid(row=0, column=0, padx=5, pady=5)
+        tk.Label(self.root, text="Age:").grid(row=1, column=0, padx=5, pady=5)
+        tk.Label(self.root, text="Grade:").grid(row=2, column=0, padx=5, pady=5)
+
+        self.name_var = tk.StringVar()
+        self.age_var = tk.StringVar()
+        self.grade_var = tk.StringVar()
+
+        tk.Entry(self.root, textvariable=self.name_var).grid(row=0, column=1, padx=5, pady=5)
+        tk.Entry(self.root, textvariable=self.age_var).grid(row=1, column=1, padx=5, pady=5)
+        tk.Entry(self.root, textvariable=self.grade_var).grid(row=2, column=1, padx=5, pady=5)
+
+        # Buttons
+        tk.Button(self.root, text="Add Student", command=self.add_student).grid(row=3, column=0, columnspan=2, pady=10)
+
+        # Treeview to display students
+        self.tree = ttk.Treeview(self.root, columns=("Name", "Age", "Grade"), show='headings')
+        self.tree.heading("Name", text="Name")
+        self.tree.heading("Age", text="Age")
+        self.tree.heading("Grade", text="Grade")
+        self.tree.grid(row=4, column=0, columnspan=2, padx=5, pady=5)
+
+    def add_student(self):
+        name = self.name_var.get()
+        age = self.age_var.get()
+        grade = self.grade_var.get()
+
+        if not name or not age or not grade:
+            messagebox.showwarning("Input error", "Please fill all fields")
+            return
+
+        # Add student info to list
+        self.students.append({"Name": name, "Age": age, "Grade": grade})
+
+        # Insert into Treeview
+        self.tree.insert("", tk.END, values=(name, age, grade))
+
+        # Clear input fields
+        self.name_var.set("")
+        self.age_var.set("")
+        self.grade_var.set("")
+
+if __name__ == "__main__":
+    root = tk.Tk()
+    app = StudentInfoApp(root)
+    root.mainloop()
